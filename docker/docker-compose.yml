@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  metagenomics-pipeline:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: metagenomics-pipeline:latest
+    container_name: metagenomics-pipeline
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '8.0'
+          memory: 16G
+        reservations:
+          cpus: '2.0'
+          memory: 4G
+    
+    # Environment variables
+    environment:
+      - PIPELINE_THREADS=4
+      - PIPELINE_MEMORY=8G
+      - TMPDIR=/tmp
+    
+    # Volume mounts
+    volumes:
+      - ./data:/data:rw
+      - ./results:/app/results:rw
+      - ./logs:/app/logs:rw
+      - ./databases:/app/databases:ro
+      - /tmp:/tmp:rw
+    
+    # Working directory
+    working_dir: /data
+    
+    # Network mode
+    network_mode: "bridge"
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Command override (can be customized)
+    command: ["python3", "/app/metapipeline_improved.py", "--help"]
+
+  # Optional: Database download service
+  database-downloader:
+    image: metagenomics-pipeline:latest
+    container_name: metagenomics-db-downloader
+    
+    volumes:
+      - ./databases:/app/databases:rw
+      - ./logs:/app/logs:rw
+    
+    working_dir: /app
+    
+    # This service can be used to download databases
+    command: ["bash", "-c", "echo 'Database downloader service ready'"]
+    
+    profiles:
+      - database-setup
+
+  # Optional: Jupyter notebook service for analysis
+  jupyter-analysis:
+    image: metagenomics-pipeline:latest
+    container_name: metagenomics-jupyter
+    
+    ports:
+      - "8888:8888"
+    
+    volumes:
+      - ./data:/data:rw
+      - ./results:/app/results:rw
+      - ./notebooks:/app/notebooks:rw
+    
+    working_dir: /app/notebooks
+    
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    
+    command: ["bash", "-c", "pip install jupyterlab && jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token=''"]
+    
+    profiles:
+      - analysis
+
+volumes:
+  pipeline-data:
+    driver: local
+  pipeline-results:
+    driver: local
+  pipeline-databases:
+    driver: local
+
+networks:
+  default:
+    driver: bridge
+

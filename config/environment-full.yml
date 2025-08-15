@@ -1,0 +1,37 @@
+name: metagenomics-pipeline
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.9
+  # Quality control
+  - fastqc
+  - trimmomatic
+  # Alignment and host removal
+  - bowtie2
+  - samtools
+  # Taxonomic classification
+  - kraken2
+  - kraken-biom
+  # Assembly and binning
+  - spades
+  - checkm-genome
+  # Phylogenetic analysis
+  - phylophlan
+  # Gene prediction
+  - prodigal
+  # Functional annotation
+  - hmmer
+  # Python dependencies
+  - biopython
+  - requests
+  - psutil
+  - pandas
+  - numpy
+  - scipy
+  - matplotlib
+  - seaborn
+  # Utilities
+  - parallel
+  - ruby

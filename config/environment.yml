@@ -1,0 +1,25 @@
+name: metagenomics-ENVtest
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+  - astrobiomike
+dependencies:
+  - fastqc
+  - trimmomatic
+  - bowtie2
+  - samtools
+  - kraken2
+  - kraken-biom=1.0.1
+  - r-base
+  - bioconductor-phyloseq
+  - spades
+  - maxbin2
+  - checkm-genome
+  - phylophlan
+  - prokka
+  - eggnog-mapper
+  - kofamscan
+  - sortmerna
+  - bedtools
+  - bit
