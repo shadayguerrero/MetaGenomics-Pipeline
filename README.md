@@ -117,27 +117,6 @@ The pipeline requires several databases. Download scripts are provided:
 
 The pipeline can be configured via:
 
-1. **Configuration file**: `config/pipeline.conf`
-2. **Command-line arguments**: Override config file settings
-3. **Environment variables**: For Docker deployments
-
-Example configuration:
-
-```ini
-[DEFAULT]
-threads = 8
-temp_dir = ./tmp
-keep_intermediate = false
-
-[QUALITY_CONTROL]
-trimmomatic_params = HEADCROP:20 SLIDINGWINDOW:4:20 MINLEN:35
-
-[HOST_REMOVAL]
-bowtie2_params = --very-sensitive-local
-
-[TAXONOMY]
-kraken2_confidence = 0.1
-```
 
 ## 🧪 Testing
 
